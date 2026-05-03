@@ -1,0 +1,115 @@
+{
+  "name": "Parth Pithadiya",
+  "title": "Backend Developer",
+  "summary": "Results-driven Backend Developer and MCA candidate graduating in May 2026 with nearly 2 years of internship experience building RESTful APIs and scalable web applications using Python, FastAPI, and Django. Proficient in PostgreSQL, MongoDB, Docker, and Git, with a strong focus on clean architecture, API optimisation, and agile collaboration.",
+  "skills": {
+    "languages_frameworks": [
+      "Python",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "FastAPI",
+      "Django"
+    ],
+    "databases": ["PostgreSQL", "MongoDB", "SQLite", "ClickHouse"],
+    "tools_devops": ["Git", "Docker", "Celery"],
+    "concepts": [
+      "REST API Design",
+      "Query Optimisation",
+      "Aggregation Pipelines",
+      "Async Processing",
+      "MVC/MVT Architecture"
+    ],
+    "data_libraries": ["Pandas", "NumPy"],
+    "languages": [
+      {
+        "name": "English",
+        "proficiency": "Professional"
+      },
+      {
+        "name": "Gujarati",
+        "proficiency": "Native"
+      },
+      {
+        "name": "Hindi",
+        "proficiency": "Professional"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "name": "ArtisanalTouch",
+      "title": "E-Commerce Platform",
+      "technologies": [
+        "Python",
+        "Django",
+        "SQLite",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Bootstrap"
+      ],
+      "description": "Full-stack responsive e-commerce site with product catalog, cart, order management, and user authentication using the Django MVT architecture."
+    },
+    {
+      "name": "Financial Analytics Dashboard",
+      "title": "Financial Analytics Dashboard",
+      "technologies": [
+        "PostgreSQL",
+        "ClickHouse",
+        "Celery",
+        "Materialized Views"
+      ],
+      "description": "High-performance analytics platform using PostgreSQL materialized views, ClickHouse aggregations, and Celery async tasks."
+    }
+  ],
+  "experience": [
+    {
+      "title": "Backend Developer Intern",
+      "company": "Astute Info Solution",
+      "location": "Ahmedabad",
+      "start_date": "Jul 2025",
+      "end_date": "Apr 2026",
+      "responsibilities": [
+        "Designed and built RESTful APIs with FastAPI following clean architecture principles for scalability and maintainability.",
+        "Managed PostgreSQL database operations including schema design, complex queries, indexing, and performance optimisation.",
+        "Engineered MongoDB aggregation pipelines for efficient NoSQL data processing and business-critical reporting."
+      ]
+    },
+    {
+      "title": "Backend Developer Intern",
+      "company": "Infolabz IT Services Pvt. Ltd.",
+      "location": "Ahmedabad",
+      "start_date": "Jun 2023",
+      "end_date": "Apr 2024",
+      "responsibilities": [
+        "Developed backend modules with Python Django for scalable, production-ready web applications.",
+        "Optimised SQL queries and managed schema migrations to improve performance and data reliability.",
+        "Collaborated with senior developers on requirements analysis, feature delivery, and code reviews."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "institution": "AMPICS, Ganpat University",
+      "location": "Gujarat",
+      "start_year": "2025",
+      "end_year": "May 2026",
+      "status": "Expected"
+    },
+    {
+      "degree": "Bachelor of Computer Applications (BCA)",
+      "institution": "Asia Pacific BCA College, Gujarat University",
+      "location": "Gujarat",
+      "graduated": "April 2024"
+    }
+  ],
+  "contact_links": {
+    "location": "Ahmedabad, Gujarat, India",
+    "email": "me@parthpithadiya.in",
+    "phone": "+91 73831 80921",
+    "linkedin": "https://in.linkedin.com/in/parth-pithadiya-4b1aa9293",
+    "github": "https://github.com/parthpithadiya17"
+  }
+}
