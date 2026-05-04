@@ -82,7 +82,7 @@ def home(request):
 
     return render(
         request,
-        "my_app/premium_home.html",
+        "myapp/premium_home.html",
         {
             "cv": cv,
             "skill_groups": skill_groups,
@@ -109,6 +109,9 @@ def contact_api(request):
     visitor_email = (data.get("email") or "").strip()
     subject = (data.get("subject") or "Portfolio contact message").strip()
     message = (data.get("message") or "").strip()
+    company = (data.get("company") or "").strip()
+    position = (data.get("position") or "").strip()
+    project_type = (data.get("project_type") or "").strip()
 
     if not name or not visitor_email or not message:
         return JsonResponse(
@@ -152,3 +155,20 @@ def contact_api(request):
         )
 
     return JsonResponse({"status": "success", "message": "Message sent"})
+
+def contact_page(request):
+    data_path = Path(settings.BASE_DIR) / "Parth_Pithadiya_CV.json"
+
+    with data_path.open(encoding="utf-8") as f:
+        cv = json.load(f)
+
+    contact_links = [
+        {"label": "Email", "value": cv["contact_links"]["email"]},
+        {"label": "Phone", "value": cv["contact_links"]["phone"]},
+        {"label": "Location", "value": cv["contact_links"]["location"]},
+    ]
+
+    return render(request, "myapp/contact.html", {
+        "cv": cv,
+        "contact_links": contact_links
+    })

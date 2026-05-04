@@ -1,0 +1,30 @@
+<form id="contact-form" class="surface p-8 rounded-lg space-y-6">
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <input type="text" name="name" placeholder="Your Name" class="input">
+    <input type="email" name="email" placeholder="Your Email" class="input">
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <input type="text" name="company" placeholder="Company / Organization" class="input">
+    <input type="text" name="position" placeholder="Your Role (e.g. HR, Founder)" class="input">
+  </div>
+
+  <select name="project_type" class="input">
+    <option value="">Project Type</option>
+    <option>Backend Development</option>
+    <option>API Development</option>
+    <option>Freelance Project</option>
+    <option>Job Opportunity</option>
+  </select>
+
+  <input type="text" name="subject" placeholder="Subject" class="input">
+
+  <textarea name="message" rows="5" placeholder="Project details or message..." class="input"></textarea>
+
+  <button type="submit"
+    class="w-full bg-aqua text-black font-bold py-3 rounded-md hover:bg-teal-300 transition">
+    Send Message
+  </button>
+
+</form>
