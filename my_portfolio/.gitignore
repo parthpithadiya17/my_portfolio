@@ -1,0 +1,17 @@
+.env
+
+db.sqlite3
+media/
+staticfiles/
+node_modules/
+
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+venv/
+env/
+
+.DS_Store
+
+.vscode/

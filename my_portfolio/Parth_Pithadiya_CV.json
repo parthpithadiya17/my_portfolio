@@ -36,33 +36,6 @@
       }
     ]
   },
-  "projects": [
-    {
-      "name": "ArtisanalTouch",
-      "title": "E-Commerce Platform",
-      "technologies": [
-        "Python",
-        "Django",
-        "SQLite",
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "Bootstrap"
-      ],
-      "description": "Full-stack responsive e-commerce site with product catalog, cart, order management, and user authentication using the Django MVT architecture."
-    },
-    {
-      "name": "Financial Analytics Dashboard",
-      "title": "Financial Analytics Dashboard",
-      "technologies": [
-        "PostgreSQL",
-        "ClickHouse",
-        "Celery",
-        "Materialized Views"
-      ],
-      "description": "High-performance analytics platform using PostgreSQL materialized views, ClickHouse aggregations, and Celery async tasks."
-    }
-  ],
   "experience": [
     {
       "title": "Backend Developer Intern",

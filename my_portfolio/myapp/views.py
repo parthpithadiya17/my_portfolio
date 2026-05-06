@@ -1,174 +1,158 @@
 import json
-from pathlib import Path
 
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.mail import BadHeaderError, EmailMessage
 from django.core.validators import validate_email
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.text import slugify
+from django.views.decorators.http import require_POST
 
-from .models import ContactMessage
-from django.views.decorators.csrf import csrf_exempt
+
+from .models import ContactMessage, Project, Blog
+from .services.cv import build_cv_context
+from .services.notifications import send_contact_email, send_contact_telegram
+
+
+def can_manage_blogs(user):
+    return user.is_authenticated and (
+        user.is_superuser
+        or user.has_perm("myapp.add_blog")
+        or user.has_perm("myapp.change_blog")
+    )
 
 
 def home(request):
-    data_path = Path(settings.BASE_DIR).parent / "Parth_Pithadiya_CV.json"
-
-    with data_path.open(encoding="utf-8") as cv_file:
-        cv = json.load(cv_file)
-
-    skill_groups = [
-        {
-            "label": "Languages & Frameworks",
-            "icon": "braces",
-            "items": cv["skills"]["languages_frameworks"],
-        },
-        {
-            "label": "Databases",
-            "icon": "database",
-            "items": cv["skills"]["databases"],
-        },
-        {
-            "label": "Tools & DevOps",
-            "icon": "container",
-            "items": cv["skills"]["tools_devops"],
-        },
-        {
-            "label": "Backend Concepts",
-            "icon": "workflow",
-            "items": cv["skills"]["concepts"],
-        },
-        {
-            "label": "Data Libraries",
-            "icon": "chart-no-axes-combined",
-            "items": cv["skills"]["data_libraries"],
-        },
-    ]
-    contact_links = [
-        {
-            "label": "Email",
-            "value": cv["contact_links"]["email"],
-            "href": f"mailto:{cv['contact_links']['email']}",
-            "icon": "mail",
-        },
-        {
-            "label": "Phone",
-            "value": cv["contact_links"]["phone"],
-            "href": f"tel:{cv['contact_links']['phone'].replace(' ', '')}",
-            "icon": "phone",
-        },
-        {
-            "label": "Location",
-            "value": cv["contact_links"]["location"],
-            "href": "#contact",
-            "icon": "map-pin",
-        },
-        {
-            "label": "LinkedIn",
-            "value": "parth-pithadiya",
-            "href": cv["contact_links"]["linkedin"],
-            "icon": "fa-linkedin",
-            "type": "fa",
-        },
-        {
-            "label": "GitHub",
-            "value": "parth-pithadiya",
-            "href": cv["contact_links"]["github"],
-            "icon": "fa-github",
-            "type": "fa",
-        },
-    ]
-
-    return render(
-        request,
-        "myapp/premium_home.html",
-        {
-            "cv": cv,
-            "skill_groups": skill_groups,
-            "contact_links": contact_links,
-        },
-    )
+    context = build_cv_context()
+    projects = Project.objects.order_by("-created_at")
+    blogs = Blog.objects.order_by("-created_at")[:3]
+    context.update({"projects": projects, "blogs": blogs})
+    return render(request, "myapp/premium_home.html", context)
 
 
-@csrf_exempt
+@require_POST
 def contact_api(request):
-    if request.method != "POST":
-        return JsonResponse(
-            {"status": "error", "message": "Method not allowed"}, status=405
-        )
-
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
-        return JsonResponse(
-            {"status": "error", "message": "Invalid request body"}, status=400
-        )
+        return JsonResponse({"status": "error", "message": "Invalid JSON"}, status=400)
 
-    name = (data.get("name") or "").strip()
-    visitor_email = (data.get("email") or "").strip()
-    subject = (data.get("subject") or "Portfolio contact message").strip()
-    message = (data.get("message") or "").strip()
-    company = (data.get("company") or "").strip()
-    position = (data.get("position") or "").strip()
-    project_type = (data.get("project_type") or "").strip()
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    company = data.get("company", "").strip()
+    subject = data.get("subject", "").strip()
+    message = data.get("message", "").strip()
 
-    if not name or not visitor_email or not message:
-        return JsonResponse(
-            {"status": "error", "message": "Name, email, and message are required"},
-            status=400,
-        )
+    if not name or not email or not subject or not message:
+        return JsonResponse({"status": "error", "message": "Required fields are missing"}, status=400)
 
     try:
-        validate_email(visitor_email)
-    except ValidationError:
-        return JsonResponse(
-            {"status": "error", "message": "Enter a valid email address"}, status=400
-        )
-
-    ContactMessage.objects.create(
-        name=name,
-        email=visitor_email,
-        subject=subject,
-        message=message,
-    )
-
-    email = EmailMessage(
-        subject=f"Portfolio contact: {subject}",
-        body=f"Message from {name} ({visitor_email}):\n\n{message}",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[settings.CONTACT_EMAIL],
-        reply_to=[visitor_email],
-    )
+        validate_email(email)
+    except Exception:
+        return JsonResponse({"status": "error", "message": "Invalid email address"}, status=400)
 
     try:
-        email.send(fail_silently=False)
-    except BadHeaderError:
-        return JsonResponse(
-            {"status": "error", "message": "Invalid email header"},
-            status=400,
+        contact_message = ContactMessage.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            company=company,
+            message=message,
         )
-    except Exception as error:
-        return JsonResponse(
-            {"status": "error", "message": f"Could not send email: {error}"},
-            status=502,
-        )
+    except Exception:
+        return JsonResponse({"status": "error", "message": "DB error"})
 
-    return JsonResponse({"status": "success", "message": "Message sent"})
+    try:
+        send_contact_email(contact_message)
+        send_contact_telegram(contact_message)
+    except Exception as e:
+        print("NOTIFICATION ERROR:", e)
+
+        return JsonResponse({
+            "status": "error",
+            "message": str(e)
+        }, status=502)
+
+    return JsonResponse({"status": "success"})
+
 
 def contact_page(request):
-    data_path = Path(settings.BASE_DIR) / "Parth_Pithadiya_CV.json"
+    return render(request, "myapp/contact.html", build_cv_context())
 
-    with data_path.open(encoding="utf-8") as f:
-        cv = json.load(f)
 
-    contact_links = [
-        {"label": "Email", "value": cv["contact_links"]["email"]},
-        {"label": "Phone", "value": cv["contact_links"]["phone"]},
-        {"label": "Location", "value": cv["contact_links"]["location"]},
-    ]
+def blog_list(request):
+    context = build_cv_context()
+    blogs = Blog.objects.filter(is_published=True).order_by("-created_at")
+    context.update(
+        {
+            "blogs": blogs,
+            "can_manage_blogs": can_manage_blogs(request.user),
+        }
+    )
+    return render(request, "myapp/blog_list.html", context)
 
-    return render(request, "myapp/contact.html", {
-        "cv": cv,
-        "contact_links": contact_links
-    })
+
+def blog_detail(request, slug):
+    context = build_cv_context()
+    blog = get_object_or_404(Blog, slug=slug)
+    context.update(
+        {
+            "blog": blog,
+            "can_manage_blogs": can_manage_blogs(request.user),
+        }
+    )
+    return render(request, "myapp/blog_detail.html", context)
+
+
+def clean_quill_content(content):
+    content = (content or "").strip()
+
+    # If it's JSON (Quill Delta)
+    if content.startswith('{"ops"'):
+        try:
+            data = json.loads(content)
+            html = ""
+
+            for op in data.get("ops", []):
+                html += op.get("insert", "")
+
+            return html
+        except json.JSONDecodeError:
+            return content
+
+    return content
+
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
+
+
+@user_passes_test(is_admin)
+def blog_create(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+
+        content = clean_quill_content(content)
+        Blog.objects.create(
+            title=title,
+            slug=slugify(title),
+            content=content,
+        )
+        return redirect("/blog/")
+
+    return render(request, "myapp/blog_edit.html")
+
+
+@user_passes_test(is_admin)
+def blog_edit(request, slug):
+    blog = get_object_or_404(Blog, slug=slug)
+
+    if request.method == "POST":
+        blog.title = request.POST.get("title")
+        blog.content = request.POST.get("content")
+
+        blog.content = clean_quill_content(blog.content)
+        blog.save()
+        return redirect("/blog/")
+
+    return render(request, "myapp/blog_edit.html", {"blog": blog})
