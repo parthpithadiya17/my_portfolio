@@ -1,0 +1,289 @@
+{% load static %}
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | {{ cv.name }}</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'myapp/images/growth2.png' %}" />
+
+    <!-- Tailwind (dev only) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              ink: "#080B10",
+              aqua: "#2DD4BF",
+              gold: "#F59E0B",
+              steel: "#94A3B8",
+              blue: "#60A5FA",
+            },
+            boxShadow: {
+              lift: "0 18px 45px rgba(45,212,191,.14)",
+              panel: "0 22px 70px rgba(0,0,0,.38)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet" />
+
+    <!-- Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}" />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* ===== ORB ANIMATION ===== */
+      .ring {
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      .ring-1 {
+        width: 100%;
+        height: 100%;
+        border: 1px solid rgba(45, 212, 191, 0.3);
+        animation: spinSlow 20s linear infinite;
+      }
+
+      .ring-2 {
+        width: 75%;
+        height: 75%;
+        border: 2px dashed rgba(45, 212, 191, 0.5);
+        animation: spinReverse 14s linear infinite;
+      }
+
+      .ring-3 {
+        width: 50%;
+        height: 50%;
+        border: 1px solid rgba(45, 212, 191, 0.4);
+      }
+
+      .center-core {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #0b1017;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(45, 212, 191, 0.4);
+        box-shadow: 0 0 40px rgba(45, 212, 191, 0.5);
+        transition: 0.3s ease;
+      }
+
+      .center-core:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 80px rgba(45, 212, 191, 0.8);
+      }
+
+      /* dropdown */
+      .dropdown-item {
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .dropdown-item:hover {
+        background: rgba(45, 212, 191, 0.1);
+        color: #2dd4bf;
+      }
+    </style>
+  </head>
+
+  <body class="contact-page overflow-hidden bg-ink text-white">
+    <div class="grid-bg pointer-events-none fixed inset-0 -z-10"></div>
+    {% include 'myapp/partials/navbar.html' %}
+    <main class="h-[calc(100dvh-77px)] overflow-hidden px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+    <div class="mx-auto flex h-full max-w-7xl items-center">
+      <div
+        class="grid w-full items-center gap-8 lg:grid-cols-[.85fr_1.15fr]">
+        <!-- ================= LEFT ================= -->
+        <div class="hidden flex-col items-center justify-center lg:flex">
+          <div
+            id="orb"
+            class="relative flex h-56 w-56 items-center justify-center xl:h-64 xl:w-64">
+            <!-- glow -->
+            <div
+              class="absolute h-[22rem] w-[22rem] rounded-full bg-aqua opacity-20 blur-[110px] xl:h-[450px] xl:w-[450px] xl:blur-[140px]"></div>
+
+            <!-- rings -->
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+
+            <!-- center -->
+            <div class="center-core">
+              <i data-lucide="send" class="text-aqua w-10 h-10"></i>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="mt-8 max-w-md space-y-2 text-center text-sm">
+            <p class="break-words font-semibold">{{ cv.contact_links.email }}</p>
+            <p class="text-steel">{{ cv.contact_links.phone }}</p>
+            <p class="text-steel">{{ cv.contact_links.location }}</p>
+
+            <div class="flex gap-4 justify-center mt-3 text-lg">
+              <a
+                href="{{ cv.contact_links.linkedin }}"
+                target="_blank"
+                class="hover:text-aqua transition">
+                <i class="fab fa-linkedin"></i>
+              </a>
+              <a
+                href="{{ cv.contact_links.github }}"
+                target="_blank"
+                class="hover:text-aqua transition">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= RIGHT ================= -->
+        <div
+          class="surface contact-form-card w-full rounded-xl p-4 sm:p-5 lg:p-6 xl:p-7">
+          <div class="mb-4 flex items-start justify-between gap-4 sm:mb-5">
+            <div>
+              <p class="font-mono text-xs font-bold uppercase tracking-[.18em] text-aqua">
+                Contact
+              </p>
+              <h2 class="mt-2 text-2xl font-black leading-tight sm:text-3xl xl:text-4xl">
+                Let's Connect
+              </h2>
+              <p class="mt-2 max-w-2xl text-sm leading-6 text-steel">
+                Share the role, project, or backend problem you want to discuss.
+              </p>
+            </div>
+            <span
+              class="hidden h-11 w-11 shrink-0 place-items-center rounded-lg border border-aqua/25 bg-aqua/10 text-aqua sm:grid">
+              <i data-lucide="send" class="h-5 w-5"></i>
+            </span>
+          </div>
+
+          <form id="contactForm" class="space-y-3 sm:space-y-4">
+            {% csrf_token %}
+            <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
+              <label class="contact-field">
+                <span>Your Name</span>
+                <input name="name" autocomplete="name" placeholder="Parth Pithadiya" class="input" />
+              </label>
+
+              <label class="contact-field">
+                <span>Email</span>
+                <input name="email" type="email" autocomplete="email" placeholder="you@example.com" class="input" />
+              </label>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
+              <label class="contact-field">
+                <span>Company</span>
+                <input
+                  name="company"
+                  autocomplete="organization"
+                  placeholder="Company / Organization"
+                  class="input" />
+              </label>
+
+              <label class="contact-field">
+                <span>Inquiry Type</span>
+                <div class="relative">
+                  <button
+                    type="button"
+                    id="dropdownBtn"
+                    class="input flex w-full items-center justify-between gap-3 text-left">
+                    <span id="dropdownValue">Project Inquiry</span>
+                    <i data-lucide="chevron-down" class="h-4 w-4 shrink-0"></i>
+                  </button>
+
+                  <div
+                    id="dropdownMenu"
+                    class="surface absolute z-50 mt-2 hidden w-full overflow-hidden rounded-lg">
+                    <div class="dropdown-item">Project Inquiry</div>
+                    <div class="dropdown-item">Job Opportunity</div>
+                    <div class="dropdown-item">Freelance Work</div>
+                    <div class="dropdown-item">Other</div>
+                  </div>
+
+                  <input
+                    type="hidden"
+                    name="type"
+                    id="dropdownInput"
+                    value="Project Inquiry" />
+                </div>
+              </label>
+            </div>
+
+            <label class="contact-field">
+              <span>Message</span>
+              <textarea
+                name="message"
+                placeholder="Tell me what you need built, fixed, or reviewed..."
+                class="input contact-message resize-none"></textarea>
+            </label>
+
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                type="submit"
+                class="btn-primary inline-flex w-full items-center justify-center gap-2 sm:w-auto sm:min-w-44">
+                Send Message
+                <i data-lucide="arrow-right" class="h-4 w-4"></i>
+              </button>
+
+              <p class="text-center text-xs leading-5 text-steel sm:text-left">
+                I typically reply within 24 hours.
+              </p>
+            </div>
+          </form>
+        </div>
+	      </div>
+	    </div>
+    </main>
+
+    <script src="{% static 'myapp/js/main.js' %}"></script>
+    <script>
+      const orb = document.getElementById("orb");
+
+      if (orb) {
+        orb.addEventListener("mousemove", (e) => {
+          const rect = orb.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          orb.style.transform = `
+            rotateX(${(y - rect.height / 2) / 28}deg)
+            rotateY(${(x - rect.width / 2) / 28}deg)
+          `;
+        });
+
+        orb.addEventListener("mouseleave", () => {
+          orb.style.transform = "rotateX(0) rotateY(0)";
+        });
+      }
+    </script>
+
+    <div
+      id="toast"
+      class="fixed bottom-6 right-6 px-5 py-3 rounded-lg bg-black text-white shadow-lg opacity-0 transition-all duration-300"></div>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+{% load static %}
+{% with on_home=request.resolver_match.url_name|default:"" %}
+<header
+  class="sticky top-0 z-50 border-b border-white/10 bg-ink/80 backdrop-blur-xl">
+  <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+    <nav class="relative flex items-center justify-between py-4">
+      <a
+        href="{% if on_home == 'home' %}#home{% else %}{% url 'home' %}#home{% endif %}"
+        class="flex items-center gap-3">
+        <img
+          src="{% static 'myapp/images/growth2.png' %}"
+          alt="Parth Pithadiya logo"
+          class="h-11 w-11 object-contain rounded-lg border border-aqua/35 bg-aqua/10 shadow-[0_0_22px_rgba(45,212,191,.18)] transition-transform duration-300 hover:scale-110" />
+        <span
+          class="hidden text-sm font-extrabold uppercase tracking-[.18em] text-white sm:block"
+          >{{ cv.name|default:"Parth Pithadiya" }}</span
+        >
+      </a>
+      <div
+        id="desktop-nav"
+        class="hidden items-center gap-7 text-sm font-semibold text-steel lg:flex">
+        <a
+          class="nav-link transition hover:text-aqua"
+          href="{% if on_home == 'home' %}#home{% else %}{% url 'home' %}#home{% endif %}"
+          >Home</a
+        >
+        <a
+          class="nav-link transition hover:text-aqua"
+          href="{% if on_home == 'home' %}#expertise{% else %}{% url 'home' %}#expertise{% endif %}"
+          >Expertise</a
+        >
+        <a
+          class="nav-link transition hover:text-aqua"
+          href="{% if on_home == 'home' %}#skills{% else %}{% url 'home' %}#skills{% endif %}"
+          >Skills</a
+        >
+        <a
+          class="nav-link transition hover:text-aqua"
+          href="{% if on_home == 'home' %}#projects{% else %}{% url 'home' %}#projects{% endif %}"
+          >Projects</a
+        >
+        <a
+          class="nav-link transition hover:text-aqua"
+          href="{% if on_home == 'home' %}#experience{% else %}{% url 'home' %}#experience{% endif %}"
+          >Resume</a
+        >
+        <a
+          class="nav-link transition hover:text-aqua{% if on_home == 'blog_list' %} is-active{% endif %}"
+          href="{% url 'blog_list' %}"
+          >Blogs</a
+        >
+      </div>
+      <div class="flex items-center gap-3">
+        <a
+          href="{% url 'contact' %}"
+          class="inline-flex items-center justify-center rounded-md bg-aqua px-4 py-2 text-sm font-bold text-ink shadow-lift transition hover:-translate-y-0.5 hover:bg-teal-300"
+          >Connect</a
+        >
+        <button
+          type="button"
+          id="mobile-menu-toggle"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-white/10 bg-white/[.04] text-white lg:hidden"
+          aria-controls="mobile-nav"
+          aria-expanded="false"
+          aria-label="Open menu">
+          <i data-lucide="menu" class="h-5 w-5"></i>
+        </button>
+      </div>
+      <div
+        id="mobile-nav"
+        class="absolute left-0 right-0 top-full mt-3 hidden rounded-lg border border-white/10 bg-ink/95 p-4 shadow-panel backdrop-blur-xl lg:hidden">
+        <div class="grid gap-2 text-sm font-semibold text-steel">
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua" href="{% if on_home == 'home' %}#home{% else %}{% url 'home' %}#home{% endif %}">Home</a>
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua" href="{% if on_home == 'home' %}#expertise{% else %}{% url 'home' %}#expertise{% endif %}">Expertise</a>
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua" href="{% if on_home == 'home' %}#skills{% else %}{% url 'home' %}#skills{% endif %}">Skills</a>
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua" href="{% if on_home == 'home' %}#projects{% else %}{% url 'home' %}#projects{% endif %}">Projects</a>
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua" href="{% if on_home == 'home' %}#experience{% else %}{% url 'home' %}#experience{% endif %}">Resume</a>
+          <a class="nav-link rounded-md px-3 py-2 transition hover:bg-white/[.04] hover:text-aqua{% if on_home == 'blog_list' %} is-active{% endif %}" href="{% url 'blog_list' %}">Blogs</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+{% endwith %}
