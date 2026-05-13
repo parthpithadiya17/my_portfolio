@@ -15,3 +15,13 @@ env/
 .DS_Store
 
 .vscode/
+
+node_modules
+venv
+
+package-lock.json
+package.json
+tailwind.config.js
+
+Parth_Pithadiya_CV.json
+Parth_Pithadiya_CV.pdf
