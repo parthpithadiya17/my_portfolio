@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,44 +11,71 @@
       tailwind.config = {
         theme: {
           extend: {
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+              mono: [
+                "JetBrains Mono",
+                "ui-monospace",
+                "SFMono-Regular",
+                "monospace",
+              ],
+            },
             colors: {
+              ink: "#080B10",
+              panel: "#161E27",
               aqua: "#2DD4BF",
               gold: "#F59E0B",
               steel: "#94A3B8",
               blue: "#60A5FA",
             },
+            boxShadow: {
+              lift: "0 18px 45px rgba(45,212,191,.14)",
+              panel: "0 22px 70px rgba(0,0,0,.38)",
+            },
           },
         },
       };
     </script>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'myapp/images/growth2.png' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}" />
 
     <!-- ICONS -->
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
 
-  <body class="bg-[#020617] text-white overflow-x-hidden">
+  <body class="font-sans bg-ink text-white overflow-x-hidden antialiased">
     <!-- Fixed progress bar -->
     <div
       id="scroll-progress"
       class="fixed top-0 left-0 h-[2px] w-0 z-[9999] bg-gradient-to-r from-aqua via-blue to-gold shadow-[0_0_20px_rgba(45,212,191,.7)]"></div>
 
-    <div class="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16 lg:py-20">
+    <div class="grid-bg pointer-events-none fixed inset-0 -z-10"></div>
+    {% include 'myapp/partials/navbar.html' %}
+
+    <main class="article-page mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-16 lg:py-20">
       <div
-        class="grid gap-10 lg:grid-cols-[minmax(0,720px)_240px] lg:gap-16 lg:justify-center">
+        class="grid gap-10 lg:grid-cols-[minmax(0,820px)_minmax(220px,260px)] lg:gap-10 lg:justify-center">
         <!-- ================= LEFT ================= -->
-        <div>
+        <div class="article-main">
           <a
             href="/blog/"
-            class="text-sm text-steel hover:text-white transition">
+            class="inline-flex items-center gap-2 text-sm font-semibold text-steel hover:text-white transition">
             ← Back
           </a>
 
-          <h1 class="mt-6 text-3xl font-black leading-tight sm:text-5xl">
+          <h1 class="article-title mt-6 text-3xl font-black leading-tight tracking-tight sm:text-5xl">
             {{ blog.title }}
           </h1>
 
-          <p class="text-steel mt-3 text-sm">
+          <p class="article-meta text-steel mt-3 text-sm">
             {{ blog.created_at|date:"M d, Y" }} · {{ blog.read_time }} min read
           </p>
 
@@ -58,14 +85,14 @@
             <div class="flex flex-wrap gap-3">
               <a
                 href="{% url 'blog_edit' blog.slug %}"
-                class="px-4 py-2 bg-yellow-400 text-black rounded-lg text-sm font-semibold hover:scale-105 transition">
-                ✏ Edit
+                class="inline-flex items-center justify-center rounded-md border border-gold/30 bg-gold/15 px-4 py-2 text-sm font-semibold text-gold hover:bg-gold/20 transition">
+                Edit
               </a>
 
               <a
                 href="{% url 'blog_create' %}"
-                class="px-4 py-2 bg-cyan-400 text-black rounded-lg text-sm font-semibold hover:scale-105 transition">
-                ➕ New
+                class="inline-flex items-center justify-center rounded-md border border-aqua/30 bg-aqua/15 px-4 py-2 text-sm font-semibold text-aqua hover:bg-aqua/20 transition">
+                New
               </a>
             </div>
             {% endif %}
@@ -74,14 +101,14 @@
             <div class="relative self-start sm:self-auto">
               <button
                 id="shareBtn"
-                class="flex items-center gap-2 px-4 py-2 text-sm border border-white/10 rounded-lg hover:bg-white/5 transition">
+                class="flex items-center gap-2 rounded-md border border-white/10 bg-white/[.04] px-4 py-2 text-sm font-semibold hover:border-aqua/35 hover:bg-white/[.06] transition">
                 <i data-lucide="share-2" class="w-4 h-4"></i>
                 Share
               </button>
 
               <div
                 id="shareMenu"
-                class="hidden absolute right-0 mt-2 w-44 bg-[#0b1220] border border-white/10 rounded-lg overflow-hidden shadow-lg">
+                class="surface hidden absolute right-0 z-30 mt-2 w-44 overflow-hidden rounded-lg">
                 <button
                   onclick="shareLinkedIn()"
                   class="flex items-center gap-2 w-full px-4 py-2 text-sm hover:bg-white/10">
@@ -100,35 +127,50 @@
           </div>
 
           <!-- IMAGE -->
-          <div class="mt-10 overflow-hidden rounded-xl">
+          <div class="surface mt-10 overflow-hidden rounded-xl p-2">
             {% if blog.image %}
-            <img src="{{ blog.image.url }}" class="h-52 w-full object-cover sm:h-72" />
+            <img src="{{ blog.image.url }}" class="h-52 w-full rounded-lg object-cover sm:h-72" />
             {% else %}
             <img
               src="{% static 'myapp/images/blog1.jpeg' %}"
-              class="h-52 w-full object-cover sm:h-72" />
+              class="h-52 w-full rounded-lg object-cover sm:h-72" />
             {% endif %}
           </div>
 
+          <details class="article-toc-mobile mt-8 rounded-xl lg:hidden">
+            <summary class="article-toc-mobile-summary">
+              <span>
+                On This Page
+              </span>
+              <span>Sections</span>
+            </summary>
+            <nav class="article-toc-mobile-nav" aria-label="Article sections">
+              <ol id="toc-mobile" class="article-toc-list"></ol>
+            </nav>
+          </details>
+
           <!-- CONTENT -->
           <div
-            class="blog-content mt-12 space-y-6 text-[17px] leading-8 text-gray-300">
+            class="blog-content article-content mt-12 space-y-6 text-[17px] leading-8 text-gray-300">
             {{ blog.content|safe }}
           </div>
         </div>
 
         <!-- ================= TOC ================= -->
-        <div class="hidden lg:block sticky top-28 h-fit">
-          <p class="text-xs uppercase tracking-widest text-steel mb-5">
-            Contents
-          </p>
-
-          <ul
-            id="toc"
-            class="space-y-3 text-sm text-gray-400 border-l border-white/10 pl-4"></ul>
-        </div>
+        <aside class="article-toc hidden lg:block sticky top-24 h-fit">
+          <div class="article-toc-shell">
+            <div class="article-toc-head">
+              <p class="article-toc-kicker">
+                On This Page
+              </p>
+            </div>
+            <nav class="article-toc-nav mt-4" aria-label="Article sections">
+              <ol id="toc" class="article-toc-list"></ol>
+            </nav>
+          </div>
+        </aside>
       </div>
-    </div>
+    </main>
 
     <!-- ================= JS ================= -->
 
@@ -173,49 +215,135 @@
     <!-- TOC -->
     <script>
       const toc = document.getElementById("toc");
-      const headings = document.querySelectorAll(".blog-content h2");
+      const tocMobile = document.getElementById("toc-mobile");
+      const tocPanel = document.querySelector(".article-toc");
+      const tocMobilePanel = document.querySelector(".article-toc-mobile");
+      const headings = [...document.querySelectorAll(".blog-content h2, .blog-content h3")];
+      const visibleHeadings = new Map();
+      let activeId = "";
+      let scrollFrame = null;
 
       headings.forEach((h, i) => {
-        const id = "section-" + i;
+        const id = h.id || "section-" + i;
         h.id = id;
 
-        const li = document.createElement("li");
+        [toc, tocMobile].forEach((list) => {
+          if (!list) return;
 
-        li.innerHTML = `
-      <a href="#${id}" class="toc-link hover:text-cyan-400 transition">
-        ${h.innerText}
-      </a>
-    `;
+          const li = document.createElement("li");
+          const link = document.createElement("a");
 
-        toc.appendChild(li);
+          li.className = h.tagName === "H3" ? "article-toc-item is-sub" : "article-toc-item";
+          link.href = "#" + id;
+          link.className = "toc-link";
+          link.textContent = h.innerText;
+
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            h.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.replaceState(null, "", "#" + id);
+          });
+
+          li.appendChild(link);
+          list.appendChild(li);
+        });
       });
+
+      activeId = headings[0]?.id || "";
+
+      if (!headings.length && tocPanel) {
+        tocPanel.classList.add("is-empty");
+      }
+
+      if (!headings.length && tocMobilePanel) {
+        tocMobilePanel.classList.add("is-empty");
+      }
 
       const tocLinks = document.querySelectorAll(".toc-link");
 
-      window.addEventListener("scroll", () => {
-        let current = "";
+      function getCurrentHeadingId() {
+        const visible = [...visibleHeadings.keys()]
+          .map((id) => {
+            const heading = document.getElementById(id);
+            return {
+              id,
+              top: heading ? heading.getBoundingClientRect().top : Number.POSITIVE_INFINITY,
+            };
+          })
+          .sort((a, b) => Math.abs(a.top - 120) - Math.abs(b.top - 120));
 
-        headings.forEach((section) => {
-          const sectionTop = section.offsetTop - 120;
+        if (visible.length) return visible[0].id;
 
-          if (window.scrollY >= sectionTop) {
-            current = section.getAttribute("id");
-          }
+        return headings.reduce((current, heading) => {
+          return heading.getBoundingClientRect().top <= 150 ? heading.id : current;
+        }, headings[0]?.id || "");
+      }
+
+      function applyActiveState(current) {
+        headings.forEach((heading) => {
+          heading.classList.toggle("is-reading", heading.id === current);
         });
+
+        const activeLinks = [];
 
         tocLinks.forEach((link) => {
-          link.classList.remove("text-cyan-400");
+          link.classList.remove("is-active");
+          link.removeAttribute("aria-current");
 
           if (link.getAttribute("href") === "#" + current) {
-            link.classList.add("text-cyan-400");
+            link.classList.add("is-active");
+            link.setAttribute("aria-current", "true");
+            activeLinks.push(link);
           }
         });
-      });
+
+        activeLinks.forEach((link) => {
+          link.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        });
+
+      }
+
+      function requestTocUpdate() {
+        if (scrollFrame) return;
+
+        scrollFrame = requestAnimationFrame(() => {
+          scrollFrame = null;
+          activeId = getCurrentHeadingId();
+          applyActiveState(activeId);
+        });
+      }
+
+      const headingObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              visibleHeadings.set(entry.target.id, {
+                id: entry.target.id,
+                top: entry.boundingClientRect.top,
+              });
+            } else {
+              visibleHeadings.delete(entry.target.id);
+            }
+          });
+
+          requestTocUpdate();
+        },
+        {
+          rootMargin: "-18% 0px -62% 0px",
+          threshold: [0, 0.15, 0.4, 0.75],
+        },
+      );
+
+      headings.forEach((heading) => headingObserver.observe(heading));
+      window.addEventListener("scroll", requestTocUpdate, { passive: true });
+      window.addEventListener("resize", requestTocUpdate);
+      applyActiveState(activeId);
     </script>
 
     <!-- ICON INIT -->
     <script>
       lucide.createIcons();
     </script>
+    <script src="{% static 'myapp/js/main.js' %}"></script>
   </body>
 </html>

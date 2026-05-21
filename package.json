@@ -1,9 +1,6 @@
 {
   "devDependencies": {
-<<<<<<< HEAD
     "@tailwindcss/cli": "^4.2.4",
-=======
->>>>>>> 209e97d (production-ready portfolio website)
     "tailwindcss": "^4.2.4"
   }
 }

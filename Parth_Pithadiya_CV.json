@@ -1,11 +1,7 @@
 {
   "name": "Parth Pithadiya",
   "title": "Backend Developer",
-<<<<<<< HEAD
   "summary": "Backend Developer and MCA candidate graduating in May 2026 with hands-on experience building scalable web applications, REST APIs, and data-driven backend systems using Python, Django, and FastAPI. Skilled in designing production-ready architectures with PostgreSQL, ClickHouse, Docker, and modern deployment workflows. Experienced in API optimisation, analytics pipelines, asynchronous processing, and responsive full-stack integration. Passionate about backend engineering, system design, and building high-performance applications with clean, maintainable architecture.",
-=======
-  "summary": "Results-driven Backend Developer and MCA candidate graduating in May 2026 with nearly 2 years of internship experience building RESTful APIs and scalable web applications using Python, FastAPI, and Django. Proficient in PostgreSQL, MongoDB, Docker, and Git, with a strong focus on clean architecture, API optimisation, and agile collaboration.",
->>>>>>> 209e97d (production-ready portfolio website)
   "skills": {
     "languages_frameworks": [
       "Python",

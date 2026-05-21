@@ -108,8 +108,8 @@
           {% for blog in blogs %}
           <a
             href="{% url 'blog_detail' blog.slug %}"
-            class="surface surface-hover group overflow-hidden rounded-xl transition duration-500 hover:-translate-y-2 hover:border-aqua/40">
-            <div class="relative h-64 overflow-hidden bg-[#06111f]">
+            class="surface surface-hover group flex h-full flex-col overflow-hidden rounded-xl transition duration-500 hover:-translate-y-2 hover:border-aqua/40">
+            <div class="relative h-64 shrink-0 overflow-hidden bg-[#06111f]">
               {% if blog.image %}
               <img
                 src="{{ blog.image.url }}"
@@ -125,9 +125,9 @@
                 class="absolute inset-0 bg-gradient-to-t from-[#020617]/70 via-transparent to-transparent"></div>
             </div>
 
-            <div class="p-7">
+            <div class="flex flex-1 flex-col p-7">
               <div
-                class="mb-5 flex items-center justify-between text-xs uppercase tracking-[.15em] text-steel">
+                class="mb-5 flex flex-wrap items-center justify-between gap-2 text-xs uppercase tracking-[.15em] text-steel">
                 <span>{{ blog.created_at|date:"M d, Y" }}</span>
 
                 <span>{{ blog.read_time }} min read</span>
@@ -142,7 +142,7 @@
                 {{ blog.excerpt }}
               </p>
 
-              <div class="mt-7 flex items-center gap-3 font-semibold text-aqua">
+              <div class="mt-auto flex items-center gap-3 pt-7 font-semibold text-aqua">
                 Read article
 
                 <span class="transition duration-300 group-hover:translate-x-1">
